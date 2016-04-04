@@ -9,9 +9,9 @@ FROM ubuntu:xenial
 # File Author / Maintainer
 MAINTAINER VicLuo
 
-# Add Chinese Repo
-RUN sed -i 's/archive.ubuntu.com/mirrors.163.com/g' /etc/apt/sources.list
-# Install Nginx
+# Add USTC Repo
+RUN rm /etc/apt/sources.list
+ADD ustc_source.list /etc/apt/sources.list
 
 # Update the repository
 RUN apt-get update
@@ -20,7 +20,7 @@ RUN apt-get update
 RUN apt-get install -y nano wget dialog net-tools
 
 # Download and Install Nginx
-RUN apt-get install -y nginx  
+RUN apt-get install -y nginx
 
 # Install zlib(required by jekyll)
 RUN apt-get install -y zlib1g-dev
@@ -30,6 +30,10 @@ RUN apt-get install -y jekyll bundler
 
 # Install git
 RUN apt-get install -y git
+
+# Install python
+RUN apt-get install -y python
+RUN apt-get install -y python-toml python-sh python-setproctitle
 
 # Remove the default Nginx configuration file
 RUN rm -v /etc/nginx/nginx.conf
@@ -53,19 +57,15 @@ RUN sed -i "s/^[ \t]*string.encode('UTF-8')/return string/g" /usr/lib/ruby/vendo
 
 RUN apt-get upgrade -y
 
-RUN jekyll build -s /home/mirror-web -d /home/mirror-web/_site 
-
-RUN apt-get install python-toml python-sh python-setproctitle -y
+RUN jekyll build -s /home/mirror-web -d /home/mirror-web/_site
 
 RUN mkdir -p /run/tunasync
 
 RUN mkdir -p /var/log/tunasync
 
 #install tunasync
-RUN git clone https://github.com/tuna/tunasync.git /home/tunasync
+RUN git clone https://github.com/sjtug/tunasync.git /home/tunasync
 ADD tunasync.conf /home/tunasync/
-
-RUN apt-get install python -y
 
 ADD manage.sh /home/
 RUN chmod +x /home/manage.sh
