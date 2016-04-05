@@ -28,9 +28,6 @@ RUN apt-get install -y zlib1g-dev
 # Install Jekyll
 RUN apt-get install -y jekyll bundler
 
-# Install git
-RUN apt-get install -y git
-
 # Install python
 RUN apt-get install -y python
 RUN apt-get install -y python-toml python-sh python-setproctitle
@@ -42,7 +39,7 @@ RUN rm -v /etc/nginx/nginx.conf
 ADD nginx.conf /etc/nginx/
 
 #Set up the web page
-RUN git clone https://github.com/sjtug/mirror-web.git /home/mirror-web
+ADD mirror-web.tar.gz /home/mirror-web
 
 WORKDIR /home/mirror-web
 
@@ -62,7 +59,7 @@ RUN mkdir -p /run/tunasync
 RUN mkdir -p /var/log/tunasync
 
 #install tunasync
-RUN git clone https://github.com/sjtug/tunasync.git /home/tunasync
+ADD tunasync.tar.gz /home/tunasync
 ADD tunasync.conf /home/tunasync/
 
 ADD manage.sh /home/
