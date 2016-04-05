@@ -55,8 +55,6 @@ RUN bundle install
 # It seems that encoding.rb mishandles babel.js's leading <EF>, which is a utf-8 zero-width whitespace
 RUN sed -i "s/^[ \t]*string.encode('UTF-8')/return string/g" /usr/lib/ruby/vendor_ruby/execjs/encoding.rb
 
-RUN apt-get upgrade -y
-
 RUN jekyll build -s /home/mirror-web -d /home/mirror-web/_site
 
 RUN mkdir -p /run/tunasync
