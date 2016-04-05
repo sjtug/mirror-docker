@@ -75,6 +75,4 @@ EXPOSE 80:80
 
 # Set the default command to execute
 # when creating a new container
-CMD ["bash /home/manage.sh"]
-
-
+CMD ["bash", "/home/manage.sh"]
