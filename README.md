@@ -1,6 +1,7 @@
 SJTUG mirror docker, based on tunasync/jekyll
 #Usage
 ```sh
+./genpack_all.sh
 docker build -t mirror .
 docker run -d -v /your/physical-storage-for-mirror:/mnt -p 80:80 mirror bash /home/manage.sh
 # -d: daemon
@@ -10,6 +11,7 @@ docker run -d -v /your/physical-storage-for-mirror:/mnt -p 80:80 mirror bash /ho
 
 or
 ```sh
+./genpack_all.sh
 docker build -t mirror .
 docker run -v /your/physical-storage-for-mirror:/mnt -p 80:80 -ti mirror bash
 # manually start 
