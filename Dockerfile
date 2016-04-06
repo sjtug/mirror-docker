@@ -35,6 +35,9 @@ RUN apt-get install -y git
 RUN apt-get install -y python
 RUN apt-get install -y python-toml python-sh python-setproctitle
 
+# Install rsync
+RUN apt-get install -y rsync
+
 # Remove the default Nginx configuration file
 RUN rm -v /etc/nginx/nginx.conf
 
