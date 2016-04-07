@@ -1,0 +1,8 @@
+*.swp
+*.tar.gz
+
+env.sh
+
+tunasync/tunasync*
+jekyll/mirror-web*
+
