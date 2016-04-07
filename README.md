@@ -59,13 +59,13 @@ The mounting point in docker containers are `/mnt/mirror-web` and
 
 ```sh
 $ docker run --name mirrors_tunasync -d \
-	-v /home/mirrors:/mnt/mirrors \
-	-v /home/mirror-web:/mnt/mirror-web \
+	-v /home/mirrors:/mnt/mirrors:Z \
+	-v /home/mirror-web:/mnt/mirror-web:Z \
 	sjtug/mirror-tunasync
 
 $ docker run --name mirrors_nginx -d -p 80:80 \
-	-v /home/mirrors:/mnt/mirrors \
-	-v /home/mirror-web:/mnt/mirror-web \
+	-v /home/mirrors:/mnt/mirrors:Z \
+	-v /home/mirror-web:/mnt/mirror-web:Z \
 	sjtug/mirror-nginx
 ```
 
