@@ -1,0 +1,16 @@
+version: '2'
+services:
+    tunasync:
+        build: tunasync
+        volumes:
+            - /home/mirrors:/mnt/mirrors
+            - /home/mirror-web:/mnt/mirror-web
+    nginx:
+        build: nginx
+        ports:
+            - "80:80"
+        volumes:
+            - /home/mirrors:/mnt/mirrors
+            - /home/mirror-web:/mnt/mirror-web
+        depends_on:
+            - tunasync

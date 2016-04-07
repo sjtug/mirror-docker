@@ -1,32 +1,87 @@
 SJTUG mirror docker, based on tunasync/jekyll
-#Usage
+
+# Preparations
+
+Follow these steps before building the images.
+
+### Prepare tunasync tar ball
+
+Prepare a gzipped tunasync tar ball without version directory (as if generated
+by `git archive` without `--prefix`), rename it to `tunasync.tar.gz`, and
+place it into `tunasync/`.
+
+You may run
 ```sh
-docker build -t mirror .
-docker run -d -v /your/physical-storage-for-mirror:/mnt -p 80:80 mirror bash /home/manage.sh
-# -d: daemon
-# -v: mounted volume
-# -p: mapped port
+$ cd tunasync
+$ ../utils/genpack.sh tunasync
+```
+to generate it automatically.
+
+### Generate static mirror-web pages
+
+Suppose the static web contents are supposed to store in `/home/mirror-web`.
+
+Fetch the latest mirror-web and build the pages. You should have working
+`jekyll` installed.
+
+```sh
+$ utils/genpack.sh mirror-web # may generate an extra .tar.gz, just ignore it
+$ cd mirror-web
+$ jekyll build -d /home/mirror-web/_site
 ```
 
-or
+Note that the actual content is stored in the subdir `_site`.
+
+You may also build the pages elsewhere and deploy them in the server.
+
+# Build and run
+
+There are two ways to build an run, the manual way and the `docker-compose`
+way. The latter is recommended.
+
+## Build and run manually
+
+### Build tunasync and nginx docker images
+
 ```sh
-docker build -t mirror .
-docker run -v /your/physical-storage-for-mirror:/mnt -p 80:80 -ti mirror bash
-# manually start 
-bash /home/manage.sh
+$ cd tunasync
+$ docker build -t sjtug/mirror-tunasync .
+$ cd ../nginx
+$ docker build -t sjtug/mirror-nginx .
 ```
 
+### Run docker containers
 
-#Tech Detail
-![diagram](https://cloud.githubusercontent.com/assets/8121231/14233269/358deb7e-f9f6-11e5-9280-a91766b96eb7.png)
+Suppose the static web contents are stored in `/home/mirror-web`, and the
+super-massive mirror filesystem is `/home/mirrors`.
+The mounting point in docker containers are `/mnt/mirror-web` and
+`/mnt/mirrors` respectively.
 
-Logs are stored in `/tmp/foo.log`.
+```sh
+$ docker run --name mirrors_tunasync -d \
+	-v /home/mirrors:/mnt/mirrors \
+	-v /home/mirror-web:/mnt/mirror-web \
+	sjtug/mirror-tunasync
 
-#Dev
-Pull requests are welcomed.
+$ docker run --name mirrors_nginx -d -p 80:80 \
+	-v /home/mirrors:/mnt/mirrors \
+	-v /home/mirror-web:/mnt/mirror-web \
+	sjtug/mirror-nginx
+```
 
-#LICENSE
-GPLv3, except files with specifications.
+## Use docker-compose
+
+After preparation, configure storage volume path in `docker-compose.yml`, then
+simply run
+```sh
+$ docker-compose -p sjtug up -d
+```
+
+# Development
+Discussions and pull requests are strongly encouraged.
+
+# LICENSE
+GPLv3, except for files with specifications.
 
  > This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  > This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
