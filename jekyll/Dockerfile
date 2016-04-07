@@ -1,12 +1,6 @@
-FROM ubuntu:xenial
-MAINTAINER VicLuo
-ADD apt_sources.list /etc/apt/sources.list
+FROM sjtug/jekyll-base:2016-04-07
 
-# zlib is required by jekyll
-RUN apt-get update && apt-get install -y \
-	bundler \
-	jekyll \
-	zlib1g-dev
+MAINTAINER VicLuo
 
 ADD mirror-web /home/mirror-web
 
