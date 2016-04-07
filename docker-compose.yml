@@ -3,14 +3,14 @@ services:
     tunasync:
         build: tunasync
         volumes:
-            - /home/mirrors:/mnt/mirrors
-            - /home/mirror-web:/mnt/mirror-web
+            - /home/mirrors:/mnt/mirrors:Z
+            - /home/mirror-web:/mnt/mirror-web:Z
     nginx:
         build: nginx
         ports:
             - "80:80"
         volumes:
-            - /home/mirrors:/mnt/mirrors
-            - /home/mirror-web:/mnt/mirror-web
+            - /home/mirrors:/mnt/mirrors:Z
+            - /home/mirror-web:/mnt/mirror-web:Z
         depends_on:
             - tunasync
