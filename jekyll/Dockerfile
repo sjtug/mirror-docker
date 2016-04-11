@@ -2,7 +2,7 @@ FROM sjtug/jekyll-base:2016-04-07
 
 MAINTAINER VicLuo
 
-ADD mirror-web /home/mirror-web
+VOLUME ["/home/mirror-web"]
 
 WORKDIR /home/mirror-web
 
