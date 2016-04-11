@@ -44,10 +44,7 @@ way. The latter is recommended.
 ### Build tunasync and nginx docker images
 
 ```sh
-$ cd tunasync
-$ docker build -t sjtug/mirror-tunasync .
-$ cd ../nginx
-$ docker build -t sjtug/mirror-nginx .
+$ utils/prepare.sh
 ```
 
 ### Run docker containers
