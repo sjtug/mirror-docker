@@ -5,7 +5,7 @@ docker build -t sjtug/mirror-jekyll-builder:latest -t sjtug/mirror-jekyll-builde
 mkdir -p /home/mirror-web/_site
 docker run \
     -v /home/mirror-web/_site:/opt/_site:Z \
-    -v ./mirror-web:/home/mirror-web:Z \
+    -v $PWD/mirror-web:/home/mirror-web:Z \
     sjtug/mirror-jekyll-builder:latest \
     jekyll build -d /opt/_site
 
