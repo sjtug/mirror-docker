@@ -8,4 +8,7 @@ RUN apt-get update && apt-get -y install \
 
 COPY nginx.conf /etc/nginx/
 
+COPY key.key /etc/nginx/ssl/
+COPY cert.cer /etc/nginx/ssl/
+
 CMD ["nginx"]
