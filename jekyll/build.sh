@@ -8,4 +8,3 @@ docker run \
     -v $PWD/mirror-web:/home/mirror-web:Z \
     sjtug/mirror-jekyll-builder:latest \
     jekyll build -d /opt/_site
-

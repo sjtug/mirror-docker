@@ -5,4 +5,5 @@ env.sh
 
 tunasync/tunasync*
 jekyll/mirror-web*
-
+nginx/cert.cer
+nginx/key.key

@@ -34,6 +34,22 @@ Note that the actual content is stored in the subdir `_site`.
 
 You may also build the pages elsewhere and deploy them in the server.
 
+### Acquire key suite from let's encrypt
+
+The configuration of nginx in this project requires key suite to support HTTPS.
+
+Key suite could be acquired from let's encrypt for free through acme.sh client.
+
+After your site became accessible from your domain, 
+`acquire_cert.sh` provides a convinient way to get key suite. If not, please refer to 
+https://github.com/Neilpang/acme.sh#use-standalone-server-to-issue-cert for steps.
+
+```sh
+source acquire_cert.sh your_website your_site_root
+```
+
+After this step, key suite should be placed under `~/.acme.sh/your_website/`.
+
 # Build and run
 
 There are two ways to build an run, the manual way and the `docker-compose`
@@ -46,6 +62,8 @@ way. The latter is recommended.
 ```sh
 $ utils/prepare.sh
 ```
+
+**NOTE**: after renewal of your key suite please run this step again to use the latest version.
 
 ### Run docker containers
 
