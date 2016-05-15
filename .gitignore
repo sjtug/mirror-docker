@@ -11,4 +11,4 @@ nginx/cert.cer
 nginx/key.key
 nginx/nginx.conf
 
-watcher/nginx-simple-watcher*
+watcher/git-repo*
