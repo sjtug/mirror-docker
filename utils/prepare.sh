@@ -14,9 +14,6 @@ done
 cd $ROOT
 ls
 
-echo "Issuing Cert with acme.sh"
-source ./acquire_cert.sh
-
 echo "Building TunaSync"
 cd tunasync
 bash ./build.sh
