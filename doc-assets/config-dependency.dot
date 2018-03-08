@@ -1,0 +1,14 @@
+digraph {
+    rankdir=LR
+    node [shape=box];
+    lug, caddy, v2ray;
+    node [shape=oval, fontname="Courier New"];
+    lug -> "lug/config.yaml";
+    lug -> "lug/worker-script";
+    lug -> "/certs" [style="dotted" label="containing certificates, mounted at"];
+    lug -> "/mnt" [style="dotted", label="underlying storage, mounted at"];
+    caddy -> "caddy/Caddyfile";
+    caddy -> "/mnt" [style="dotted", label="mounted at"];
+    "caddy/Caddyfile" -> "lug/config.yaml" [label="gen_caddyfile.sh ../lug/config.yaml Caddyfile", fontname="Courier New"];
+    v2ray -> "v2ray/config.json";
+}

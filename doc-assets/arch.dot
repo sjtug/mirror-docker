@@ -1,0 +1,51 @@
+digraph {
+    compound=true;
+    concentrate=true;
+    subgraph clusterProxyServer {
+        label="Proxy Server";
+        "v2ray_server";
+        graph[style=solid];
+    }
+
+    subgraph "cluster TencentCloud CDN for sjtug.org" {
+        label="TencentCloud CDN for sjtug.org";
+        mirror_news [label="/tags/mirror-news/index.xml" fontname="Courier New"];
+        mirror_help [label="/tags/mirror-help/index.xml" fontname="Courier New"];
+    }
+
+    subgraph clusterReverseProxyUpstream {
+        label="Reverse Proxy Upstream";
+        style=dotted;
+        reverse_proxy_upstream;
+    }
+
+    subgraph clusterRsyncUpstream {
+        label="Rsync Upstream";
+        style=dotted;
+        rsync_upstream;
+    }
+
+    subgraph clusterMirrorDocker {
+        label="mirror-docker";
+        lug; caddy; v2ray;
+        disk_storage [shape=house];
+        v2ray -> "v2ray_server";
+        lug -> v2ray [label="proxy from"];
+        caddy -> v2ray [label="proxy from"];
+        lug -> disk_storage [label="stores packages at"];
+        lug -> rsync_upstream [label="pull packages from"];
+        caddy -> disk_storage [label="serves packages & frontend at"];
+        caddy -> reverse_proxy_upstream [label="reverse proxies"];
+        caddy -> lug [label="proxies /lug/v1/api"];
+        graph[style=solid];
+    }
+
+    subgraph clusterMirrorUser {
+        label="User of mirrors";
+        style=dotted;
+        browser[label="browser visiting https://mirrors.sjtug.org"];
+        browser -> caddy [label="get frontend & packages"];
+        browser -> mirror_news [label="get mirror news"];
+        browser -> mirror_help [label="get repo helps"];
+    }
+}

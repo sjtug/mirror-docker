@@ -1,0 +1,152 @@
+{
+  "log": {
+	  "loglevel": "debug"
+  },
+  "inbound": {
+    "port": 8080,
+    "listen": "0.0.0.0",
+    "protocol": "http",
+    "settings": {
+	"timeout": 30,
+	"allowTransparent": true
+    }
+  },
+  "outbound": {
+    "protocol": "vmess",
+    "settings": {
+      "vnext": [
+        {
+          "address": "PLACE_YOUR_IP_HERE",
+          "port": 1234,
+          "users": [
+            {
+              "id": "PLACE_YOUR_UUID_HERE",
+	      "level": 0,
+              "alterId": 64,
+	      "security": "aes-128-gcm"
+            }
+          ]
+        }
+      ]
+    },
+    "mux": {
+	    "enabled": true,
+	    "concurrency": 4
+    },
+    "streamSettings": {
+	    "network": "tcp",
+	    "security": "tls",
+	    "tlsSettings": {
+		    "serverName": "PLACE_YOUR_SERVER_NAME_HERE",
+		    "allowInsecure": false
+	    },
+	    "kcpSettings": {
+		    "congestion": true,
+		    "header": {
+			    "type": "wechat-video"
+		    }
+	    }
+    },
+    "tag": "vmess"
+  },
+  "outboundDetour": [
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    }
+  ],
+  "dns" :{
+	  "hosts": {
+		  "baidu.com": "127.0.0.1"
+	  },
+	  "servers": [
+		  "8.8.8.8",
+		  "8.8.4.4",
+		  "localhost"
+	  ]
+  },
+  "routing": {
+    "strategy": "rules",
+    "settings": {
+      "rules": [
+	{
+		"type": "field",
+		"ip": ["117.71.17.145", "163.177.72.198", "74.125.204.108", "64.233.189.108"],
+		"outboundTag": "vmess"
+	},
+	{
+		"type": "field",
+		"domain": ["github.com", "qt.io", "beicoins.com", "v2ex.com", "uxengine.net"],
+		"outboundTag": "vmess"
+	},
+        {
+          "type": "field",
+          "port": "54-79",
+          "outboundTag": "direct"
+        },
+        {
+          "type": "field",
+          "port": "81-442",
+          "outboundTag": "direct"
+        },
+        {
+          "type": "field",
+          "port": "444-65535",
+          "outboundTag": "direct"
+        },
+	{
+		"type": "chinaip",
+		"outboundTag": "direct"
+	},
+	{
+		"type": "chinasites",
+		"outboundTag": "direct"
+	},
+        {
+          "type": "field",
+          "domain": [
+            "gc.kis.scr.kaspersky-labs.com",
+	    "dl.acm.org",
+	    "ieeexplore.ieee.org",
+	    "acgvideo.com",
+	    "weiyun.com",
+	    "qq.com",
+	    "ceping.com",
+	    "xiami.com",
+	    "xiami.net",
+	    "kmf.com",
+	    "bilibili.com",
+	    "1point3acres.com",
+	    "163.com",
+	    "126.net",
+	    "taobao.org",
+	    "hdslb.com"
+          ],
+          "outboundTag": "direct"
+        },
+        {
+          "type": "field",
+          "ip": [
+            "0.0.0.0/8",
+            "10.0.0.0/8",
+            "100.64.0.0/10",
+            "127.0.0.0/8",
+            "169.254.0.0/16",
+            "172.16.0.0/12",
+            "192.0.0.0/24",
+            "192.0.2.0/24",
+            "192.168.0.0/16",
+            "198.18.0.0/15",
+            "198.51.100.0/24",
+            "203.0.113.0/24",
+            "::1/128",
+            "fc00::/7",
+            "fe80::/10"
+          ],
+          "outboundTag": "direct"
+        }
+      ]
+    }
+  }
+}

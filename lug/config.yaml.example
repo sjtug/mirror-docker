@@ -1,0 +1,69 @@
+interval: 10 # Interval between pollings
+loglevel: 4 # 1-5
+# Prometheus metrics are exposed at http://exporter_address/metrics
+exporter_address: :8081
+
+logstash:
+   address: listener.logz.io:5050 # logstash sink. Lug will send all logs to this address
+   additional_fields:
+       token: "" # Additional fields sent to logstash server
+
+# Address where JSON API will be served
+json_api:
+    address: :7001
+
+repos:
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://rsync.chiark.greenend.org.uk/ftp/users/sgtatham/putty-website-mirror/
+      interval: 60
+      path: /mnt/putty
+      name: putty
+    - type: shell_script
+      name: archlinux-cn
+      interval: 6000
+      path: /mnt/archlinux-cn
+      script: /worker-script/archlinux-cn.sh
+      username: blahblah
+      password: blahblah
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      exclude_hidden: true
+      source: rsync://rsync11.us.gentoo.org/gentoo-portage/
+      interval: 1200
+      path: /mnt/gentoo
+      name: gentoo
+    - type: external
+      name: ubuntu
+      proxy_to: http://ftp.sjtu.edu.cn/ubuntu/
+    - type: external
+      name: archlinux
+      proxy_to: http://ftp.sjtu.edu.cn/archlinux/
+    - type: external
+      name: fedora
+      proxy_to: http://ftp.sjtu.edu.cn/fedora/
+    - type: external
+      name: debian
+      proxy_to: http://ftp.sjtu.edu.cn/debian/
+    - type: external
+      name: ubuntu-cd
+      proxy_to: http://ftp.sjtu.edu.cn/ubuntu-cd/
+    - type: external
+      name: debian-cd
+      proxy_to: http://ftp.sjtu.edu.cn/debian-cd/
+    - type: external
+      name: linuxmint
+      proxy_to: http://ftp.sjtu.edu.cn/linuxmint/
+    - type: external
+      name: deepin
+      proxy_to: http://ftp.sjtu.edu.cn/deepin/
+    - type: external
+      name: opensuse
+      proxy_to: http://ftp.sjtu.edu.cn/opensuse
+    - type: external
+      name: docker-registry
+      proxy_to: https://registry-1.docker.io
+    - type: external
+      name: npm-registry
+      proxy_to: https://registry.npmjs.org
+

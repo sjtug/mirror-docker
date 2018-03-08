@@ -1,0 +1,93 @@
+version: "2.3"
+
+services:
+  v2ray:
+    image: v2ray/official
+    volumes:
+      - ./v2ray/config.json:/etc/v2ray/config.json
+    networks:
+      - proxy_net
+    container_name: v2ray
+    logging:
+      options:
+        max-size: "2M"
+        max-file: "10"
+    mem_limit: 2G
+    memswap_limit: 2G
+    cpu_count: 2
+
+
+  lug:
+    build:
+      context: ./lug
+    image: lug:built
+    environment:
+      http_proxy: http://v2ray:8080
+      https_proxy: http://v2ray:8080
+      rsync_proxy: http://v2ray:8080
+    container_name: lug
+    volumes:
+      - ./lug/config.yaml:/config.yaml
+      - ./lug/worker-script:/worker-script
+      - /mnt/data12T:/mnt
+    command: lug -c /config.yaml
+    ports:
+      - "8081:8081"
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+      nproc:
+        hard: 1024
+        soft: 1024
+    networks:
+      - proxy_net
+      - lug_net
+    logging:
+      options:
+        max-size: "2M"
+        max-file: "10"
+    mem_limit: 5G
+    memswap_limit: 5G
+    cpu_count: 4
+    restart: always
+
+  caddy:
+    build:
+      context: ./caddy-builder/
+    image: caddy:built
+    environment:
+      http_proxy: http://v2ray:8080
+      https_proxy: http://v2ray:8080
+      rsync_proxy: http://v2ray:8080
+    container_name: caddy
+    command: -conf /etc/Caddyfile -catimeout 30s  -email vicluo96@gmail.com -agree --log stdout -port 443
+    volumes:
+      - ./caddy/Caddyfile:/etc/Caddyfile
+      - /mnt/data12T:/mnt
+      - /root/.acme.sh/mirrors.sjtug.org:/certs
+      - ./frontend/dist:/mirror-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9180:9180"
+    logging:
+      options:
+        max-size: "2M"
+        max-file: "10"
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    networks:
+      - proxy_net
+      - lug_net
+    mem_limit: 5G
+    memswap_limit: 5G
+    cpu_count: 8
+    restart: always
+
+networks:
+  proxy_net:
+  lug_net:
+
