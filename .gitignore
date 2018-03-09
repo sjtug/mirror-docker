@@ -1,3 +1,16 @@
 /frontend/dist/
 /caddy/Caddyfile
 !.gitkeep
+
+/caddy/Caddyfile.template
+/docker-compose.yml
+/lug/Caddyfile
+/lug/Caddyfile.template
+/lug/config.example.yaml
+/lug/config.yaml
+/lug/gen_caddyfile.sh
+/lug/gomplate
+/lug/lug
+/lug/lug.zip
+/v2ray/config.json
+
