@@ -135,10 +135,19 @@ def download_repo(executor, url_root: str, target_dir: str):
             except Exception as exc:
                 sys.stderr.write('Failed to download {}/{}: {} | {} \n'.format(url_root, name, exc, traceback.format_exc()))
                 download_failed_cnt += 1
-    if download_failed_cnt > DOWNLOAD_FAILED_THRESHOLD:
-        raise RuntimeError('Failed to sync repos at {}'.format(url_root))
-    os.rename(tmp_result_path, os.path.join(target_dir, 'repodata.json'))
-    os.rename(tmp_result_bz2_path, os.path.join(target_dir, 'repodata.json.bz2'))
+        if download_failed_cnt > DOWNLOAD_FAILED_THRESHOLD:
+            raise RuntimeError('Failed to sync repos at {}'.format(url_root))
+        os.rename(tmp_result_path, os.path.join(target_dir, 'repodata.json'))
+        os.rename(tmp_result_bz2_path, os.path.join(target_dir, 'repodata.json.bz2'))
+        print('Remove unused files...')
+        for filename in os.listdir(target_dir):
+            if filename.startswith('.') or (filename.endswith('.bz2') and filename != 'repodata.json.bz2' and filename not in packages):
+                delta_since_last_modify = time.time() - os.path.getmtime(os.path.join(target_dir, filename))
+                if delta_since_last_modify <= 86400:
+                    print('Skipped {}. Since last modify only occurs {} seconds ago.'.format(filename, delta_since_last_modify))
+                    continue
+                print('Deleting {}'.format(filename))
+                os.remove(os.path.join(target_dir, filename))
     print('Succeeded to sync {}'.format(url_root))
 
 REPOS = {}
