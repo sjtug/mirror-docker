@@ -123,7 +123,11 @@ def download_repo(executor, url_root: str, target_dir: str):
     download_failed_cnt = 0
     with open(tmp_result_path, 'r') as f:
         j = json.load(f)
-        packages = j["packages"]
+        if 'packages' not in j:
+            print('No package in repo {}'.format(url_root))
+            packages = {}
+        else:
+            packages = j["packages"]
         download_futures = {}
         for name, value in packages.items():
             print('Submitted to download {}/{}'.format(url_root, name))
