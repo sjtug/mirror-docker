@@ -162,7 +162,7 @@ def get_config_from_env():
     if 'path' in j:
         PATH_BASE = j['path']
     for k, v in j.items():
-        if v.startswith('http'):
+        if isinstance(v, str) and v.startswith('http'):
             REPOS[k] = v
 
 if __name__ == '__main__':
