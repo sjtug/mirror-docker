@@ -1,0 +1,216 @@
+interval: 10 # Interval between pollings
+loglevel: 4 # 1-5
+# Prometheus metrics are exposed at http://exporter_address/metrics
+exporter_address: :8081
+
+logstash:
+   address: listener.logz.io:5050 # logstash sink. Lug will send all logs to this address
+   additional_fields:
+
+# Address where JSON API will be served
+json_api:
+    address: :7001
+
+repos:
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://rsync.chiark.greenend.org.uk/ftp/users/sgtatham/putty-website-mirror/
+      interval: 60
+      path: /mnt/putty
+      name: putty
+    - type: shell_script
+      name: archlinux-cn
+      interval: 6000
+      path: /mnt/archlinux-cn
+      script: /worker-script/archlinux-cn.sh
+      username: blahblah
+      password: blahblah
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://rsync11.us.gentoo.org/gentoo-portage/
+      interval: 1200
+      path: /mnt/gentoo
+      name: gentoo
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://ftp.ca.vim.org/vim
+      interval: 60
+      path: /mnt/vim
+      name: vim
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://ftp.tsukuba.wide.ad.jp/manjaro
+      interval: 120
+      path: /mnt/manjaro
+      name: manjaro
+      exclude_hidden: true
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://mirror.csclub.uwaterloo.ca/alpine
+      interval: 3600
+      path: /mnt/alpine
+      name: alpine
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://tug.ctan.org/CTAN/
+      interval: 3600
+      path: /mnt/ctan
+      name: ctan
+      exclude_hidden: true
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://ftp.kddilabs.jp/cpan/
+      interval: 3600
+      path: /mnt/cpan
+      name: cpan
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://cran.csie.ntu.edu.tw/CRAN/CRAN/
+      interval: 3600
+      path: /mnt/cran
+      name: cran
+      ignore_vanish: true
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://mirrors.tuna.tsinghua.edu.cn/ctex/
+      interval: 3600
+      path: /mnt/ctex
+      name: ctex
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://mirror.csclub.uwaterloo.ca/gnu/
+      interval: 3600
+      path: /mnt/gnu
+      name: gnu
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://mirror.steadfast.net/cygwin/
+      interval: 3600
+      path: /mnt/cygwin
+      name: cygwin
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://mirror.umd.edu/packages.ros.org/ros/
+      interval: 3600
+      path: /mnt/ros
+      name: ros
+    - type: shell_script
+      script: /worker-script/bandersnatch.sh
+      master: https://pypi.python.org/
+      path: /mnt/pypi
+      name: pypi
+      interval: 3600
+    - type: shell_script
+      script: /worker-script/anaconda.py
+      path: /mnt/anaconda/
+      name: anaconda
+      interval: 3600
+      pkgs/main/linux-64: https://repo.continuum.io/pkgs/main/linux-64/
+      pkgs/main/linux-32: https://repo.continuum.io/pkgs/main/linux-32/
+      pkgs/main/linux-ppc64le: https://repo.continuum.io/pkgs/main/linux-ppc64le/
+      pkgs/main/osx-64: https://repo.continuum.io/pkgs/main/osx-64/
+      pkgs/main/win-64: https://repo.continuum.io/pkgs/main/win-64/
+      pkgs/main/win-32: https://repo.continuum.io/pkgs/main/win-32/
+      pkgs/main/noarch: https://repo.continuum.io/pkgs/main/noarch/
+      pkgs/free/linux-64: https://repo.continuum.io/pkgs/free/linux-64/
+      pkgs/free/linux-32: https://repo.continuum.io/pkgs/free/linux-32/
+      pkgs/free/linux-armv6l: https://repo.continuum.io/pkgs/free/linux-armv6l/
+      pkgs/free/linux-armv7l: https://repo.continuum.io/pkgs/free/linux-armv7l/
+      pkgs/free/linux-ppc64le: https://repo.continuum.io/pkgs/free/linux-ppc64le/
+      pkgs/free/osx-64: https://repo.continuum.io/pkgs/free/osx-64/
+      pkgs/free/osx-32: https://repo.continuum.io/pkgs/free/osx-32/
+      pkgs/free/win-64: https://repo.continuum.io/pkgs/free/win-64/
+      pkgs/free/win-32: https://repo.continuum.io/pkgs/free/win-32/
+      pkgs/free/noarch: https://repo.continuum.io/pkgs/free/noarch/
+      pkgs/r/linux-64: https://repo.continuum.io/pkgs/r/linux-64/
+      pkgs/r/linux-32: https://repo.continuum.io/pkgs/r/linux-32/
+      pkgs/r/linux-armv6l: https://repo.continuum.io/pkgs/r/linux-armv6l/
+      pkgs/r/linux-armv7l: https://repo.continuum.io/pkgs/r/linux-armv7l/
+      pkgs/r/linux-ppc64le: https://repo.continuum.io/pkgs/r/linux-ppc64le/
+      pkgs/r/osx-64: https://repo.continuum.io/pkgs/r/osx-64/
+      pkgs/r/osx-32: https://repo.continuum.io/pkgs/r/osx-32/
+      pkgs/r/win-64: https://repo.continuum.io/pkgs/r/win-64/
+      pkgs/r/win-32: https://repo.continuum.io/pkgs/r/win-32/
+      pkgs/r/noarch: https://repo.continuum.io/pkgs/r/noarch/
+      pkgs/pro/linux-64: https://repo.continuum.io/pkgs/pro/linux-64/
+      pkgs/pro/linux-32: https://repo.continuum.io/pkgs/pro/linux-32/
+      pkgs/pro/linux-armv6l: https://repo.continuum.io/pkgs/pro/linux-armv6l/
+      pkgs/pro/linux-armv7l: https://repo.continuum.io/pkgs/pro/linux-armv7l/
+      pkgs/pro/linux-ppc64le: https://repo.continuum.io/pkgs/pro/linux-ppc64le/
+      pkgs/pro/osx-64: https://repo.continuum.io/pkgs/pro/osx-64/
+      pkgs/pro/osx-32: https://repo.continuum.io/pkgs/pro/osx-32/
+      pkgs/pro/win-64: https://repo.continuum.io/pkgs/pro/win-64/
+      pkgs/pro/win-32: https://repo.continuum.io/pkgs/pro/win-32/
+      pkgs/pro/noarch: https://repo.continuum.io/pkgs/pro/noarch/
+      pkgs/mro/linux-64: https://repo.continuum.io/pkgs/mro/linux-64/
+      pkgs/mro/linux-32: https://repo.continuum.io/pkgs/mro/linux-32/
+      pkgs/mro/linux-armv6l: https://repo.continuum.io/pkgs/mro/linux-armv6l/
+      pkgs/mro/linux-armv7l: https://repo.continuum.io/pkgs/mro/linux-armv7l/
+      pkgs/mro/linux-ppc64le: https://repo.continuum.io/pkgs/mro/linux-ppc64le/
+      pkgs/mro/osx-64: https://repo.continuum.io/pkgs/mro/osx-64/
+      pkgs/mro/osx-32: https://repo.continuum.io/pkgs/mro/osx-32/
+      pkgs/mro/win-64: https://repo.continuum.io/pkgs/mro/win-64/
+      pkgs/mro/win-32: https://repo.continuum.io/pkgs/mro/win-32/
+      pkgs/mro/noarch: https://repo.continuum.io/pkgs/mro/noarch/
+      pkgs/msys2/win-64: https://repo.continuum.io/pkgs/msys2/win-64/
+      pkgs/msys2/win-32: https://repo.continuum.io/pkgs/msys2/win-32/
+      cloud/conda-forge/noarch: https://conda.anaconda.org/conda-forge/noarch/
+      cloud/conda-forge/linux-64: https://conda.anaconda.org/conda-forge/linux-64/
+      cloud/conda-forge/osx-64: https://conda.anaconda.org/conda-forge/osx-64/
+      cloud/conda-forge/win-64: https://conda.anaconda.org/conda-forge/win-64/
+      cloud/bioconda/noarch: https://conda.anaconda.org/bioconda/noarch/
+      cloud/bioconda/linux-64: https://conda.anaconda.org/bioconda/linux-64/
+      cloud/bioconda/osx-64: https://conda.anaconda.org/bioconda/osx-64/
+      cloud/menpo/noarch: https://conda.anaconda.org/menpo/noarch/
+      cloud/menpo/linux-64: https://conda.anaconda.org/menpo/linux-64/
+      cloud/menpo/osx-64: https://conda.anaconda.org/menpo/osx-64/
+      cloud/menpo/win-64: https://conda.anaconda.org/menpo/win-64/
+      cloud/matsci/noarch: https://conda.anaconda.org/matsci/noarch/
+      cloud/matsci/linux-64: https://conda.anaconda.org/matsci/linux-64/
+      cloud/matsci/osx-64: https://conda.anaconda.org/matsci/osx-64/
+      cloud/matsci/win-64: https://conda.anaconda.org/matsci/win-64/
+      cloud/soumith/linux-64: https://conda.anaconda.org/soumith/linux-64/
+      cloud/soumith/osx-64: https://conda.anaconda.org/soumith/osx-64/
+    - type: external
+      name: rust-static
+      proxy_to: https://static.rust-lang.org/
+    - type: external
+      name: debian-security
+      proxy_to: http://ftp.sjtu.edu.cn/debian-security/
+    - type: external
+      name: centos
+      proxy_to: http://ftp.sjtu.edu.cn/centos/
+    - type: external
+      name: ubuntu
+      proxy_to: http://ftp.sjtu.edu.cn/ubuntu/
+    - type: external
+      name: archlinux
+      proxy_to: http://ftp.sjtu.edu.cn/archlinux/
+    - type: external
+      name: fedora
+      proxy_to: http://ftp.sjtu.edu.cn/fedora/
+    - type: external
+      name: debian
+      proxy_to: http://ftp.sjtu.edu.cn/debian/
+    - type: external
+      name: ubuntu-cd
+      proxy_to: http://ftp.sjtu.edu.cn/ubuntu-cd/
+    - type: external
+      name: debian-cd
+      proxy_to: http://ftp.sjtu.edu.cn/debian-cd/
+    - type: external
+      name: linuxmint
+      proxy_to: http://ftp.sjtu.edu.cn/linuxmint/
+    - type: external
+      name: deepin
+      proxy_to: http://ftp.sjtu.edu.cn/deepin/
+    - type: external
+      name: opensuse
+      proxy_to: http://ftp.sjtu.edu.cn/opensuse
+    - type: external
+      name: docker-registry
+      proxy_to: https://registry-1.docker.io
+    - type: external
+      name: npm-registry
+      proxy_to: https://registry.npmjs.org
+

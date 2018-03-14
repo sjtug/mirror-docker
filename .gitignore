@@ -6,7 +6,6 @@
 /docker-compose.yml
 /lug/Caddyfile
 /lug/Caddyfile.template
-/lug/config.example.yaml
 /lug/config.yaml
 /lug/gen_caddyfile.sh
 /lug/gomplate
