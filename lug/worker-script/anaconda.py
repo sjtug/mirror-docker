@@ -106,7 +106,7 @@ def download_file(url_root: str, target_dir: str, name: str, md5: str, size: int
     os.rename(tmp_filepath, filepath)
     print('Suceeded to download {}'.format(filepath))
 
-DOWNLOAD_FAILED_THRESHOLD = 5 # <=5 errors are acceptable
+DOWNLOAD_FAILED_THRESHOLD = 50 # <=50 errors are acceptable
 def download_repo(executor, url_root: str, target_dir: str):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
