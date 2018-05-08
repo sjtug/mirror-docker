@@ -4,7 +4,7 @@ if [ "$LUG_exclude_hidden" ]; then
 	exclude_hidden_flags="--exclude=.*"
 fi
 
-if [ "LUG_ignore_vanish" ]; then
+if [ "$LUG_ignore_vanish" ]; then
 	IGNOREEXIT=24
 	IGNOREOUT='^(file has vanished: |rsync warning: some files vanished before they could be transferred)'
 fi
@@ -16,7 +16,7 @@ retcode="$?"
 
 cat "$tmp_stderr" >&2
 
-if [ "LUG_ignore_vanish" ]; then
+if [ "$LUG_ignore_vanish" ]; then
 	if [ "$retcode" -eq "$IGNOREEXIT" ]; then
 		if egrep "$IGNOREOUT" "$tmp_stderr"; then
 			retcode=0
