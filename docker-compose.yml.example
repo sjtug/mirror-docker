@@ -30,7 +30,7 @@ services:
       - ./lug/config.yaml:/config.yaml
       - ./lug/worker-script:/worker-script
       - /mnt/data12T:/mnt
-    command: lug -c /config.yaml
+    command: -c /config.yaml
     ports:
       - "8081:8081"
     ulimits:
