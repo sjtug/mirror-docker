@@ -86,7 +86,7 @@ class VerifyError(RuntimeError):
     def __str__(self):
         return 'Failed to verify {}'.format(self.msg)
 
-@retry(VerifyError, tries=3, delay=3, backoff=2)
+@retry((VerifyError, ValueError), tries=3, delay=3, backoff=2)
 def download_file(url_root: str, target_dir: str, name: str, md5: str, size: int):
     filepath = os.path.join(target_dir, name)
     tmp_filepath = os.path.join(target_dir, '.' + name)
