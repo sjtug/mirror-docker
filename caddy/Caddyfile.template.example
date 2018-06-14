@@ -8,7 +8,7 @@
 {{/* address of lug backend */}}
 {{ $lug_addr := "lug:7001" }}
 
-{{ $base := "mirrors.sjtug.org" }}
+{{ $base := "mirrors.sjtug.sjtu.edu.cn" }}
 
 {{/* configure methods to protect your admin API */}}
 {{ define "login_config" }}
@@ -24,21 +24,19 @@
     allow sub htfy96
 {{ end }}
 
-{{ define "tls_certkey" }} /certs/fullchain.cer /certs/mirrors.sjtug.org.key {{ end }}
+{{ define "tls_certkey" }}  {{ end }}
 
 {{define "serve_local_common_config"}}
     log stdout
-    ratelimit / 32 32 second
 {{ end }}
 
 {{ define "reverse_proxy_common_config" }}
     log stdout
-    ratelimit / 32 32 second
+    ratelimit * / 200 400 minute
 {{ end }}
 
 {{ define "reverse_proxy_common_proxy_config" }}
-        max_conns 5
-        fail_timeout 5s
+        max_conns 100
         header_upstream X-Real-IP {remote}
         header_upstream X-Forwarded-For {remote}
         header_upstream X-Forwarded-Proto {scheme}
@@ -54,10 +52,12 @@
     cors
 
     root /mirror-frontend
+    {{ template "serve_local_common_config" }}
 
     # TLS
-    tls {{ template "tls_certkey" }}
+    # tls {{ template "tls_certkey" }}
 
+    ratelimit * /lug 4 8 second
     # API
     proxy /lug/ {{$lug_addr}} {
         {{ template "reverse_proxy_common_proxy_config" }}
@@ -71,29 +71,68 @@
     login {
         {{ template "login_config" }}
     }
-    ratelimit / 4 8 second
     gzip
+
+    proxy /git http://git-http-backend {
+    }
 }
 
 {{ range $name, $worker := $cfg.repos }}
 # worker {{$name}}
-{{ if and (index $worker "name") (index $worker "path") }}  {{/* specify name and path */}}
+{{ if and (and (index $worker "name") (index $worker "path")) (not (index $worker "no_direct_serving")) }}  {{/* specify name and path */}}
 {{$base}}/{{$worker.name}} {
-    tls {{ template "tls_certkey" }}
     root {{$worker.path}}
     browse
     {{ template "serve_local_common_config" }}
 }
 
-{{ else if and (index $worker "name") (index $worker "proxy_to") }} {{/* reverse_proxy */}}
+{{ if index $worker "subdomain" }}
+{{$worker.subdomain}}.{{$base}}/ {
+    root {{$worker.path}}
+    browse
+    {{ template "serve_local_common_config" }}
+}
+{{ end }} {{/* if index $worker subdomain */}}
+{{ end }}
+
+{{ if and (index $worker "name") (index $worker "proxy_to") }} {{/* reverse_proxy */}}
 {{$base}}/{{$worker.name}} {
-    tls {{ template "tls_certkey" }}
+    # tls {{ template "tls_certkey" }}
     proxy / {{$worker.proxy_to}} {
         without /{{$worker.name}}
         {{ template "reverse_proxy_common_proxy_config" }}
     }
+
+    {{ if or (index $worker "filter_path") (index $worker "filter_content_type") }}
+	    filter rule {
+		    {{ if index $worker "filter_path" }} path {{$worker.filter_path}} {{ end }}
+		    {{ if index $worker "filter_content_type" }} content_type {{$worker.filter_content_type}} {{ end }}
+		    search_pattern {{$worker.filter_search_pattern}}
+		    replacement "{{$worker.filter_replacement}}"
+	    }
+    {{ end }} {{/* if filters */}}
+
     {{ template "reverse_proxy_common_config" }}
 }
+
+{{ if index $worker "subdomain" }}
+{{$worker.subdomain}}.{{$base}}/ {
+    # tls {{ template "tls_certkey" }}
+    proxy / {{$worker.proxy_to}} {
+        without /{{$worker.name}}
+        {{ template "reverse_proxy_common_proxy_config" }}
+    }
+    {{ if or (index $worker "filter_path") (index $worker "filter_content_type") }}
+	    filter rule {
+		    {{ if index $worker "filter_path" }} path {{$worker.filter_path}} {{ end }}
+		    {{ if index $worker "filter_content_type" }} content_type {{$worker.filter_content_type}} {{ end }}
+		    search_pattern {{$worker.filter_search_pattern}}
+		    replacement "{{$worker.filter_replacement}}"
+	    }
+    {{ end }} {{/* if filters */}}
+    {{ template "reverse_proxy_common_config" }}
+}
+{{ end }} {{/* subdomain */}}
 {{ end }} {{/* if $worker */}}
 {{ end }} {{/* range */}}
 
