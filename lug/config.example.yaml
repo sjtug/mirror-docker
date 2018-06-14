@@ -1,11 +1,13 @@
 interval: 10 # Interval between pollings
 loglevel: 4 # 1-5
+concurrent_limit: 5
 # Prometheus metrics are exposed at http://exporter_address/metrics
 exporter_address: :8081
 
 logstash:
    address: listener.logz.io:5050 # logstash sink. Lug will send all logs to this address
    additional_fields:
+       token: "" # Additional fields sent to logstash server
 
 # Address where JSON API will be served
 json_api:
@@ -15,7 +17,7 @@ repos:
     - type: shell_script
       script: /worker-script/rsync.sh
       source: rsync://rsync.chiark.greenend.org.uk/ftp/users/sgtatham/putty-website-mirror/
-      interval: 60
+      interval: 3600
       path: /mnt/putty
       name: putty
     - type: shell_script
@@ -23,43 +25,43 @@ repos:
       interval: 6000
       path: /mnt/archlinux-cn
       script: /worker-script/archlinux-cn.sh
-      username: blahblah
-      password: blahblah
+      username: abc
+      password: todo
     - type: shell_script
       script: /worker-script/rsync.sh
       source: rsync://rsync11.us.gentoo.org/gentoo-portage/
-      interval: 1200
+      interval: 3600
       path: /mnt/gentoo
       name: gentoo
     - type: shell_script
       script: /worker-script/rsync.sh
       source: rsync://ftp.ca.vim.org/vim
-      interval: 60
+      interval: 3600
       path: /mnt/vim
       name: vim
     - type: shell_script
       script: /worker-script/rsync.sh
       source: rsync://ftp.tsukuba.wide.ad.jp/manjaro
-      interval: 120
+      interval: 3600
       path: /mnt/manjaro
       name: manjaro
       exclude_hidden: true
     - type: shell_script
       script: /worker-script/rsync.sh
-      source: rsync://mirror.csclub.uwaterloo.ca/alpine
+      source: rsync://rsync.alpinelinux.org/alpine/
       interval: 3600
       path: /mnt/alpine
       name: alpine
     - type: shell_script
       script: /worker-script/rsync.sh
-      source: rsync://tug.ctan.org/CTAN/
-      interval: 3600
+      source: rsync://rsync.dante.ctan.org/CTAN	
+      interval: 86400
       path: /mnt/ctan
       name: ctan
       exclude_hidden: true
     - type: shell_script
       script: /worker-script/rsync.sh
-      source: rsync://ftp.kddilabs.jp/cpan/
+      source: cpan-rsync.perl.org::CPAN
       interval: 3600
       path: /mnt/cpan
       name: cpan
@@ -78,8 +80,8 @@ repos:
       name: ctex
     - type: shell_script
       script: /worker-script/rsync.sh
-      source: rsync://mirror.csclub.uwaterloo.ca/gnu/
-      interval: 3600
+      source: rsync://mirrors.ocf.berkeley.edu/gnu/
+      interval: 43200
       path: /mnt/gnu
       name: gnu
     - type: shell_script
@@ -90,21 +92,36 @@ repos:
       name: cygwin
     - type: shell_script
       script: /worker-script/rsync.sh
-      source: rsync://mirror.umd.edu/packages.ros.org/ros/
+      source: rsync.osuosl.org::ros-main
       interval: 3600
       path: /mnt/ros
+      mirror_path: /mnt/ros/ubuntu
       name: ros
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://ftp.nluug.nl/kali/
+      interval: 10800
+      path: /mnt/kali
+      name: kali
+    - type: shell_script
+      script: /worker-script/rsync.sh
+      source: rsync://ftp.nluug.nl/kali-images/	
+      interval: 10800
+      path: /mnt/kali-images
+      name: kali-images
     - type: shell_script
       script: /worker-script/bandersnatch.sh
       master: https://pypi.python.org/
       path: /mnt/pypi
       name: pypi
       interval: 3600
+      retry_on_ssl_fail: true
     - type: shell_script
       script: /worker-script/anaconda.py
       path: /mnt/anaconda/
       name: anaconda
       interval: 3600
+      thread_num: 80
       pkgs/main/linux-64: https://repo.continuum.io/pkgs/main/linux-64/
       pkgs/main/linux-32: https://repo.continuum.io/pkgs/main/linux-32/
       pkgs/main/linux-ppc64le: https://repo.continuum.io/pkgs/main/linux-ppc64le/
@@ -171,6 +188,7 @@ repos:
       cloud/matsci/win-64: https://conda.anaconda.org/matsci/win-64/
       cloud/soumith/linux-64: https://conda.anaconda.org/soumith/linux-64/
       cloud/soumith/osx-64: https://conda.anaconda.org/soumith/osx-64/
+      cloud/soumith/noarch: https://conda.anaconda.org/soumith/noarch/
     - type: external
       name: rust-static
       proxy_to: https://static.rust-lang.org/
@@ -210,7 +228,50 @@ repos:
     - type: external
       name: docker-registry
       proxy_to: https://registry-1.docker.io
+      subdomain: docker
     - type: external
       name: npm-registry
       proxy_to: https://registry.npmjs.org
-
+    - type: external
+      name: flutter_infra
+      proxy_to: https://storage.googleapis.com/flutter_infra/
+    - type: external
+      name: dart_packages
+      proxy_to: https://pub.dartlang.org/
+      subdomain: dart-pub
+      filter_content_type: text/html.*
+      filter_search_pattern: </footer>
+      filter_replacement: "<div>dart-pub.mirrors.sjtug.sjtu.edu.cn is a reverse proxy of <a href='https://pub.dartlang.org/'>https://pub.dartlang.org/</a> provided by <a href=https://mirrors.sjtug.sjtu.edu.cn>SJTUG mirror service</a>.</footer>"
+    - type: external
+      name: maven-central
+      proxy_to: http://repo.maven.apache.org/maven2/
+    - type: shell_script
+      script: /worker-script/git.sh
+      name: git/homebrew-core.git
+      origin: https://github.com/Homebrew/homebrew-core.git
+      interval: 3801
+      path: /mnt/git/homebrew-core.git
+      no_direct_serving: true
+    - type: shell_script
+      script: /worker-script/git.sh
+      name: git/homebrew-cask.git
+      interval: 3801
+      path: /mnt/git/homebrew-cask.git
+      origin: https://github.com/Homebrew/homebrew-cask.git
+      no_direct_serving: true
+    - type: external
+      name: homebrew-bottles
+      proxy_to: https://homebrew.bintray.com/
+      subdomain: homebrew-bottles
+    - type: shell_script
+      name: raspbian
+      script: /worker-script/rsync.sh
+      path: /mnt/raspbian
+      interval: 10801
+      source: rsync://archive.raspbian.org/archive/
+    - type: shell_script
+      name: raspberrypi
+      script: /worker-script/rsync.sh
+      path: /mnt/raspberrypi
+      interval: 10801
+      source: apt-repo.raspberrypi.org::archive
