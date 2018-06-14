@@ -9,6 +9,10 @@ if [ "$LUG_ignore_vanish" ]; then
 	IGNOREOUT='^(file has vanished: |rsync warning: some files vanished before they could be transferred)'
 fi
 
+if [ "$LUG_mirror_path" ]; then
+	LUG_path="$LUG_mirror_path"
+fi
+
 tmp_stderr=$(mktemp "/tmp/rsync-$LUG_name.XXX")
 
 rsync -aHvh --no-o --no-g --stats --delete --delete-delay --safe-links --exclude '.~tmp~/' --partial-dir=.rsync-partial --timeout=120 --contimeout=120 $exclude_hidden_flags "$LUG_source" "$LUG_path" 2> "$tmp_stderr"
