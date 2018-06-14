@@ -1,7 +1,7 @@
 digraph {
     rankdir=LR
     node [shape=box];
-    lug, caddy, v2ray;
+    lug, caddy, v2ray, "git-http-backend";
     node [shape=oval, fontname="Courier New"];
     lug -> "lug/config.yaml";
     lug -> "lug/worker-script";
@@ -11,4 +11,5 @@ digraph {
     caddy -> "/mnt" [style="dotted", label="mounted at"];
     "caddy/Caddyfile" -> "lug/config.yaml" [label="gen_caddyfile.sh ../lug/config.yaml Caddyfile", fontname="Courier New"];
     v2ray -> "v2ray/config.json";
+    "git-http-backend" -> "/git" [stype="dotted", label="mounted at"];
 }
