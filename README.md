@@ -1,5 +1,5 @@
 # mirror-docker
-This repository contains essential configurations and steps to set up a mirror like https://mirrors.sjtug.org
+This repository contains essential configurations and steps to set up a mirror like https://mirrors.sjtug.sjtu.edu.cn
 
 ## Overview
 
