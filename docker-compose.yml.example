@@ -7,6 +7,7 @@ services:
       - ./v2ray/config.json:/etc/v2ray/config.json
     networks:
       - proxy_net
+      - git_net
     container_name: v2ray
     logging:
       options:
@@ -15,7 +16,27 @@ services:
     mem_limit: 2G
     memswap_limit: 2G
     cpu_count: 2
+    restart: always
+    environment:
+      V2RAY_RAY_BUFFER_SIZE: 5
 
+  git-http-backend:
+    build:
+      context: ./git-http-backend
+    volumes:
+      - /mnt/data12T/git:/git
+    container_name: git-http-backend
+    logging:
+      options:
+        max-size: "2M"
+        max-file: "10"
+    mem_limit: 1G
+    memswap_limit: 1G
+    cpu_count: 4
+    cpu_shares: 500
+    restart: always
+    networks:
+      - git_net
 
   lug:
     build:
@@ -24,7 +45,7 @@ services:
     environment:
       http_proxy: http://v2ray:8080
       https_proxy: http://v2ray:8080
-      rsync_proxy: http://v2ray:8080
+      RSYNC_PROXY: v2ray:8080
     container_name: lug
     volumes:
       - ./lug/config.yaml:/config.yaml
@@ -59,7 +80,7 @@ services:
     environment:
       http_proxy: http://v2ray:8080
       https_proxy: http://v2ray:8080
-      rsync_proxy: http://v2ray:8080
+      RSYNC_PROXY: v2ray:8080
     container_name: caddy
     command: -conf /etc/Caddyfile -catimeout 30s  -email vicluo96@gmail.com -agree --log stdout -port 443
     volumes:
@@ -82,6 +103,7 @@ services:
     networks:
       - proxy_net
       - lug_net
+      - git_net
     mem_limit: 5G
     memswap_limit: 5G
     cpu_count: 8
@@ -90,4 +112,5 @@ services:
 networks:
   proxy_net:
   lug_net:
+  git_net:
 
