@@ -16,11 +16,11 @@
     "settings": {
       "vnext": [
         {
-          "address": "PLACE_YOUR_IP_HERE",
+          "address": "PLACE_YOUR_SERVER_HERE",
           "port": 1234,
           "users": [
             {
-              "id": "PLACE_YOUR_UUID_HERE",
+              "id": "PLACE_YOUR_ID_HERE",
 	      "level": 0,
               "alterId": 64,
 	      "security": "aes-128-gcm"
@@ -37,7 +37,7 @@
 	    "network": "tcp",
 	    "security": "tls",
 	    "tlsSettings": {
-		    "serverName": "PLACE_YOUR_SERVER_NAME_HERE",
+		    "serverName": "PLACE_YOUR_SERVER_HERE",
 		    "allowInsecure": false
 	    },
 	    "kcpSettings": {
@@ -56,6 +56,15 @@
       "tag": "direct"
     }
   ],
+  "policy": {
+	  "levels": {
+		  "0": {
+			  "uplinkOnly": 0,
+			  "downlinkOnly": 0,
+			  "connIdle": 60
+		  }
+	  }
+  },
   "dns" :{
 	  "hosts": {
 		  "baidu.com": "127.0.0.1"
@@ -80,21 +89,6 @@
 		"domain": ["github.com", "qt.io", "beicoins.com", "v2ex.com", "uxengine.net"],
 		"outboundTag": "vmess"
 	},
-        {
-          "type": "field",
-          "port": "54-79",
-          "outboundTag": "direct"
-        },
-        {
-          "type": "field",
-          "port": "81-442",
-          "outboundTag": "direct"
-        },
-        {
-          "type": "field",
-          "port": "444-65535",
-          "outboundTag": "direct"
-        },
 	{
 		"type": "chinaip",
 		"outboundTag": "direct"
@@ -121,7 +115,10 @@
 	    "163.com",
 	    "126.net",
 	    "taobao.org",
-	    "hdslb.com"
+	    "hdslb.com",
+	    "lug",
+	    "caddy",
+	    "git-http-backend"
           ],
           "outboundTag": "direct"
         },
