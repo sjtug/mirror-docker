@@ -16,4 +16,4 @@ fi
 echo "Input: $1"
 echo "Output: $2"
 
-"${BASEDIR}/gomplate" -f "${BASEDIR}/Caddyfile.template" -d "cfg=$1" -o "$2"
+"${BASEDIR}/p2" -t "${BASEDIR}/Caddyfile.template.p2" -i "$1" -o "$2"

@@ -3,6 +3,7 @@
 !.gitkeep
 
 /caddy/Caddyfile.template
+/caddy/Caddyfile.template.p2
 /docker-compose.yml
 /lug/Caddyfile
 /lug/Caddyfile.template

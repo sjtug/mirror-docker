@@ -1,0 +1,123 @@
+{% autoescape off %}
+{% with lug_addr="lug:7001" base="mirrors.sjtug.sjtu.edu.cn" %}
+
+{% macro login_config() %}
+    {% comment %}
+        by default this uses Github OAuth, change it to your needs!
+        the sample OAuth application only allows redirection to 127.0.0.1:2015, so register your own OAuth App! 
+    {% endcomment %}
+    github client_id=enter_your_id,client_secret=enter_your_secret
+    jwt_expiry 24h
+    cookie_expiry 2400h
+{% endmacro %}
+
+{% macro jwt_config() %}
+    {% comment %}
+        only allow username=htfy96 
+    {% endcomment %}
+    allow sub htfy96
+{% endmacro %}
+
+
+{% macro tls_config() %}
+{% endmacro %}
+
+{% macro common_config() %}
+    log stdout
+    {{ tls_config() }}
+{% endmacro %}
+
+{% macro filter_rules(worker) %}
+    {% if worker.filter_path or worker.filter_content_type %}
+        filter rule {
+            {% if worker.filter_path %} path {{ worker.filter_path }} {% endif %}
+            {% if worker.filter_content_type %} content_type {{ worker.filter_content_type }} {% endif %}
+            search_pattern {{ worker.filter_search_pattern }}
+            replacement "{{worker.filter_replacement | addslashes }}"
+        }
+    {% endif %}
+{% endmacro %}
+
+{% macro reverse_proxy_common_rules() %}
+        max_conns 100
+        header_upstream X-Real-IP {remote}
+        header_upstream X-Forwarded-For {remote}
+        header_upstream X-Forwarded-Proto {scheme}
+{% endmacro %}
+
+{% macro reverse_proxy_config(worker) %}
+    {{ common_config() }}
+    proxy / {{ worker.proxy_to }} {
+        without /{{ worker.name }}
+        {{ reverse_proxy_common_rules() }}
+    }
+    ratelimit * / 200 400 minute
+    {{ filter_rules(worker) }}
+{% endmacro %}
+
+{% macro local_config(worker) %}
+    {{ common_config() }}
+    root {{ worker.path }}
+    browse
+    {{ filter_rules(worker) }}
+{% endmacro %}
+
+{% macro gen_sites(worker) %}
+    {% if worker.name and worker.path and not worker.no_direct_serving %}
+        {{ base }}/{{ worker.name }} {
+                {{ local_config(worker) }}
+        }
+        {% if worker.subdomain %}
+            {{ worker.subdomain }}.{{ base }}/ {
+                {{ local_config(worker) }}
+            }
+        {% endif %}
+    {% endif %}
+
+    {% if worker.name and worker.proxy_to %}
+        {{ base }}/{{ worker.name }} {
+            {{ reverse_proxy_config(worker) }}
+        }
+        {% if worker.subdomain %}
+            {{ worker.subdomain }}.{{ base }}/ {
+                {{ reverse_proxy_config(worker) }}
+            }
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{{ base }}/ {
+    prometheus {
+        address 0.0.0.0:9180
+    }
+    cors
+    root /mirror-frontend
+    {{ common_config() }}
+    ratelimit * /lug 40 80 second
+
+    proxy /lug {{ lug_addr }} {
+        {{ reverse_proxy_common_rules() }}
+    }
+
+    jwt {
+        path /lug/v1/admin
+        {{ jwt_config() }}
+    }
+
+    login {
+        {{ login_config() }}
+    }
+
+    gzip
+
+    proxy /git http://git-http-backend {
+        {{ reverse_proxy_common_rules() }}
+    }
+}
+
+{% for worker in repos %}
+    {{ gen_sites(worker) }}
+{% endfor %}
+
+{% endwith %}
+{% endautoescape %}
