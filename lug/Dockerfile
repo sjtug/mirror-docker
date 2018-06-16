@@ -1,4 +1,4 @@
-FROM htfy96/lug:release-0.12.1
+FROM htfy96/lug:release-0.12.2
 
 RUN apt-get update && apt-get install rsync awscli python3-pip rsync python wget git -y
 RUN pip3 install bandersnatch
