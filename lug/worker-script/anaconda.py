@@ -145,7 +145,7 @@ def download_repo(executor, url_root: str, target_dir: str):
         os.rename(tmp_result_bz2_path, os.path.join(target_dir, 'repodata.json.bz2'))
         print('Remove unused files...')
         for filename in os.listdir(target_dir):
-            if filename.startswith('.') or (filename.endswith('.bz2') and filename != 'repodata.json.bz2' and filename not in packages):
+            if (filename.startswith('.') and filename != '.conda') or (filename.endswith('.bz2') and filename != 'repodata.json.bz2' and filename not in packages):
                 delta_since_last_modify = time.time() - os.path.getmtime(os.path.join(target_dir, filename))
                 if delta_since_last_modify <= 86400:
                     print('Skipped {}. Since last modify only occurs {} seconds ago.'.format(filename, delta_since_last_modify))
