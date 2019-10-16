@@ -182,10 +182,6 @@ repos:
       cloud/menpo/linux-64: https://conda.anaconda.org/menpo/linux-64/
       cloud/menpo/osx-64: https://conda.anaconda.org/menpo/osx-64/
       cloud/menpo/win-64: https://conda.anaconda.org/menpo/win-64/
-      cloud/matsci/noarch: https://conda.anaconda.org/matsci/noarch/
-      cloud/matsci/linux-64: https://conda.anaconda.org/matsci/linux-64/
-      cloud/matsci/osx-64: https://conda.anaconda.org/matsci/osx-64/
-      cloud/matsci/win-64: https://conda.anaconda.org/matsci/win-64/
       cloud/soumith/linux-64: https://conda.anaconda.org/soumith/linux-64/
       cloud/soumith/osx-64: https://conda.anaconda.org/soumith/osx-64/
       cloud/soumith/noarch: https://conda.anaconda.org/soumith/noarch/
