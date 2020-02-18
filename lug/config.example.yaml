@@ -182,9 +182,10 @@ repos:
       cloud/menpo/linux-64: https://conda.anaconda.org/menpo/linux-64/
       cloud/menpo/osx-64: https://conda.anaconda.org/menpo/osx-64/
       cloud/menpo/win-64: https://conda.anaconda.org/menpo/win-64/
-      cloud/soumith/linux-64: https://conda.anaconda.org/soumith/linux-64/
-      cloud/soumith/osx-64: https://conda.anaconda.org/soumith/osx-64/
-      cloud/soumith/noarch: https://conda.anaconda.org/soumith/noarch/
+      cloud/pytorch/linux-64: https://conda.anaconda.org/pytorch/linux-64/
+      cloud/pytorch/osx-64: https://conda.anaconda.org/pytorch/osx-64/
+      cloud/pytorch/noarch: https://conda.anaconda.org/pytorch/noarch/
+      cloud/pytorch/win-64: https://conda.anaconda.org/pytorch/win-64/
     - type: external
       name: rust-static
       proxy_to: https://static.rust-lang.org/
