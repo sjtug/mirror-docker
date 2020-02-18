@@ -189,6 +189,10 @@ repos:
       cloud/soumith/linux-64: https://conda.anaconda.org/soumith/linux-64/
       cloud/soumith/osx-64: https://conda.anaconda.org/soumith/osx-64/
       cloud/soumith/noarch: https://conda.anaconda.org/soumith/noarch/
+      cloud/ngsolve/noarch: https://conda.anaconda.org/ngsolve/noarch/
+      cloud/ngsolve/linux-64: https://conda.anaconda.org/ngsolve/linux-64/
+      cloud/ngsolve/osx-64: https://conda.anaconda.org/ngsolve/osx-64/
+      cloud/ngsolve/win-64: https://conda.anaconda.org/ngsolve/win-64/
     - type: external
       name: rust-static
       proxy_to: https://static.rust-lang.org/
