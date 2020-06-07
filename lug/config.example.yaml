@@ -149,26 +149,6 @@ repos:
       pkgs/r/win-64: https://repo.continuum.io/pkgs/r/win-64/
       pkgs/r/win-32: https://repo.continuum.io/pkgs/r/win-32/
       pkgs/r/noarch: https://repo.continuum.io/pkgs/r/noarch/
-      pkgs/pro/linux-64: https://repo.continuum.io/pkgs/pro/linux-64/
-      pkgs/pro/linux-32: https://repo.continuum.io/pkgs/pro/linux-32/
-      pkgs/pro/linux-armv6l: https://repo.continuum.io/pkgs/pro/linux-armv6l/
-      pkgs/pro/linux-armv7l: https://repo.continuum.io/pkgs/pro/linux-armv7l/
-      pkgs/pro/linux-ppc64le: https://repo.continuum.io/pkgs/pro/linux-ppc64le/
-      pkgs/pro/osx-64: https://repo.continuum.io/pkgs/pro/osx-64/
-      pkgs/pro/osx-32: https://repo.continuum.io/pkgs/pro/osx-32/
-      pkgs/pro/win-64: https://repo.continuum.io/pkgs/pro/win-64/
-      pkgs/pro/win-32: https://repo.continuum.io/pkgs/pro/win-32/
-      pkgs/pro/noarch: https://repo.continuum.io/pkgs/pro/noarch/
-      pkgs/mro/linux-64: https://repo.continuum.io/pkgs/mro/linux-64/
-      pkgs/mro/linux-32: https://repo.continuum.io/pkgs/mro/linux-32/
-      pkgs/mro/linux-armv6l: https://repo.continuum.io/pkgs/mro/linux-armv6l/
-      pkgs/mro/linux-armv7l: https://repo.continuum.io/pkgs/mro/linux-armv7l/
-      pkgs/mro/linux-ppc64le: https://repo.continuum.io/pkgs/mro/linux-ppc64le/
-      pkgs/mro/osx-64: https://repo.continuum.io/pkgs/mro/osx-64/
-      pkgs/mro/osx-32: https://repo.continuum.io/pkgs/mro/osx-32/
-      pkgs/mro/win-64: https://repo.continuum.io/pkgs/mro/win-64/
-      pkgs/mro/win-32: https://repo.continuum.io/pkgs/mro/win-32/
-      pkgs/mro/noarch: https://repo.continuum.io/pkgs/mro/noarch/
       pkgs/msys2/win-64: https://repo.continuum.io/pkgs/msys2/win-64/
       pkgs/msys2/win-32: https://repo.continuum.io/pkgs/msys2/win-32/
       cloud/conda-forge/noarch: https://conda.anaconda.org/conda-forge/noarch/
@@ -178,10 +158,6 @@ repos:
       cloud/bioconda/noarch: https://conda.anaconda.org/bioconda/noarch/
       cloud/bioconda/linux-64: https://conda.anaconda.org/bioconda/linux-64/
       cloud/bioconda/osx-64: https://conda.anaconda.org/bioconda/osx-64/
-      cloud/menpo/noarch: https://conda.anaconda.org/menpo/noarch/
-      cloud/menpo/linux-64: https://conda.anaconda.org/menpo/linux-64/
-      cloud/menpo/osx-64: https://conda.anaconda.org/menpo/osx-64/
-      cloud/menpo/win-64: https://conda.anaconda.org/menpo/win-64/
       cloud/pytorch/linux-64: https://conda.anaconda.org/pytorch/linux-64/
       cloud/pytorch/osx-64: https://conda.anaconda.org/pytorch/osx-64/
       cloud/pytorch/noarch: https://conda.anaconda.org/pytorch/noarch/
