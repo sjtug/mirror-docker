@@ -13,9 +13,17 @@ if [ "$LUG_mirror_path" ]; then
 	LUG_path="$LUG_mirror_path"
 fi
 
+if [[ -z "$RSYNC_SSH" ]]; then
+	conntimeout=--contimeout=600
+fi
+
+if [[ ! -z "$SYNC_SYMLINK" ]]; then
+	rsync_symlink=-L
+fi
+
 tmp_stderr=$(mktemp "/tmp/rsync-$LUG_name.XXX")
 
-rsync -aHvh --no-o --no-g --stats --delete --delete-delay --safe-links --exclude '.~tmp~/' --partial-dir=.rsync-partial --timeout=120 --contimeout=120 $exclude_hidden_flags "$LUG_source" "$LUG_path" 2> "$tmp_stderr"
+rsync -aHvh $rsync_symlink --no-o --no-g --stats --delete --delete-delay --safe-links --exclude '.~tmp~' --partial-dir=.rsync-partial --timeout=600 $conntimeout $exclude_hidden_flags "$LUG_source" "$LUG_path" 2> "$tmp_stderr"
 retcode="$?"
 
 cat "$tmp_stderr" >&2
