@@ -1,11 +1,13 @@
 #!/bin/bash
 
+set -xe
+
 if [ ! -d "${LUG_path}/.git" ]; then
-	git clone --mirror "$LUG_origin" "$LUG_path"
+	git clone "$LUG_origin" "$LUG_path"
 fi
 
 cd "$LUG_path"
-git pull origin --all
+git pull --all --rebase
 git update-server-info
 git gc --auto
 git repack -a -b -d
