@@ -252,3 +252,9 @@ repos:
       path: /mnt/raspberrypi
       interval: 10801
       source: apt-repo.raspberrypi.org::archive
+    - type: shell_script
+      script: /worker-script/macports.sh
+      source: rsync://rsync-origin.macports.org/macports/
+      interval: 3600
+      path: /mnt/macports
+      name: macports
